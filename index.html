@@ -7,37 +7,96 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             margin: 0;
             padding: 0;
+            background-color: #000000;
+            color: white;
         }
         .container {
             max-width: 600px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #fff;
+            background-color: #111111;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(255, 0, 0, 0.5);
             text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 2em;
+            color: #FF0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            margin-bottom: 20px;
         }
         input {
             width: 100%;
-            padding: 10px;
+            padding: 15px;
             margin: 10px 0;
-            border: 2px solid #ddd;
+            border: 2px solid #FF0000;
             border-radius: 5px;
+            background-color: #222222;
+            color: white;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            border-color: #FF6666;
+            outline: none;
+            background-color: #333333;
         }
         .botao-download {
-            background-color: #1da1f2;
+            background-color: #FF0000;
             color: white;
-            padding: 10px 20px;
+            padding: 15px 25px;
             border-radius: 5px;
             text-decoration: none;
             font-weight: bold;
+            font-size: 1.2em;
+            display: inline-block;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        .botao-download:hover {
+            background-color: #FF6666;
         }
         .instrucoes {
             font-size: 14px;
-            color: #555;
+            color: #CCCCCC;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.6em;
+            }
+            .container {
+                margin: 20px;
+                padding: 15px;
+            }
+            input {
+                font-size: 1em;
+            }
+            .botao-download {
+                padding: 12px 22px;
+                font-size: 1em;
+            }
+        }
+        .bolha {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 0, 0, 0.5);
+            animation: bolha 4s infinite;
+            pointer-events: none;
+        }
+        @keyframes bolha {
+            0% {
+                transform: scale(0);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+                top: 100%;
+            }
         }
     </style>
     <script>
@@ -112,15 +171,33 @@
                 }
             }
         }
+
+        // Função para criar bolhas de efeito
+        function criarBolha() {
+            const bolha = document.createElement('div');
+            bolha.classList.add('bolha');
+
+            const size = Math.random() * 30 + 20; // Tamanho aleatório entre 20px e 50px
+            bolha.style.width = `${size}px`;
+            bolha.style.height = `${size}px`;
+
+            bolha.style.left = `${Math.random() * 100}vw`; // Posição horizontal aleatória
+            bolha.style.animationDuration = `${Math.random() * 3 + 3}s`; // Tempo aleatório de animação
+
+            document.body.appendChild(bolha);
+
+            // Remove a bolha após a animação
+            bolha.addEventListener('animationend', () => {
+                bolha.remove();
+            });
+        }
+
+        // Cria bolhas a cada 0.5 segundos
+        setInterval(criarBolha, 500);
     </script>
 </head>
 <body>
     <div class="container">
         <h1>Baixar Vídeo do TikTok</h1>
         <label for="url">Cole a URL do vídeo do TikTok (Encurtada ou Verdadeira):</label>
-        <input type="text" id="url" placeholder="https://vm.tiktok.com/ZMk3Ck4bm/" oninput="atualizarBotao()">
-        <div id="resultado" style="margin-top: 20px;"></div>
-        <p class="instrucoes">Digite uma URL válida para gerar o botão de download.</p>
-    </div>
-</body>
-</html>
+        <input type="text" id="
