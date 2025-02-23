@@ -6,13 +6,11 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Fazendo a requisição à URL encurtada
         const response = await fetch(url, {
             method: 'GET',
-            redirect: 'follow', // Seguir redirecionamentos
+            redirect: 'follow',
         });
 
-        // Retorna a URL final após o redirecionamento
         return res.status(200).json({ url: response.url });
     } catch (error) {
         console.error(error);
