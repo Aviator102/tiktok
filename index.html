@@ -3,34 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desencurtador de URL</title>
+    <title>Download TikTok</title>
+    <style>
+        /* Estilos para a página */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        .botao-download {
+            background-color: #1da1f2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .instrucoes {
+            font-size: 14px;
+            color: #555;
+        }
+        .bolha {
+            position: absolute;
+            background-color: rgba(0, 0, 255, 0.3);
+            border-radius: 50%;
+            animation: bolhaAnimation linear infinite;
+        }
+        @keyframes bolhaAnimation {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+        }
+    </style>
     <script>
-        // Função para desencurtar a URL
-        function desencurtarURL(urlEncurtada) {
-            fetch(`/api/desencurtar?url=${encodeURIComponent(urlEncurtada)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.url) {
-                        alert("A URL verdadeira é: " + data.url);
-                    } else {
-                        alert("Erro ao acessar a URL.");
-                    }
-                })
-                .catch(err => {
-                    console.error('Erro na requisição:', err);
-                    alert("Erro ao acessar a URL.");
-                });
+        async function buscarUrlDesencurtada(urlEncurtada) {
+            try {
+                const response = await fetch(`/api/desencurtar?url=${encodeURIComponent(urlEncurtada)}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.url;
+                } else {
+                    console.error('Erro ao obter URL desencurtada:', response.statusText);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Erro ao fazer a requisição:', error);
+                return null;
+            }
         }
 
-        function processar() {
-            var urlEncurtada = document.getElementById("urlInput").value;
-            desencurtarURL(urlEncurtada);
+        async function atualizarBotao() {
+            var url = document.getElementById('url').value;
+            const urlDesencurtada = await buscarUrlDesencurtada(url);
+
+            if (urlDesencurtada) {
+                var regex = /\/(\d+)$/;
+                var match = urlDesencurtada.match(regex);
+                var resultado = document.getElementById('resultado');
+                resultado.innerHTML = '';
+
+                if (match) {
+                    var videoId = match[1];
+                    var downloadUrl = "https://tikcdn.io/ssstik/" + videoId;
+
+                    var botao = document.createElement("a");
+                    botao.href = downloadUrl;
+                    botao.target = "_blank";
+                    botao.innerText = "Baixar Vídeo";
+                    botao.classList.add("botao-download");
+
+                    resultado.appendChild(botao);
+                }
+            } else {
+                alert("Erro ao desencurtar a URL. Verifique a URL inserida.");
+            }
         }
+
+        function criarBolha() {
+            const bolha = document.createElement('div');
+            bolha.classList.add('bolha');
+            const size = Math.random() * 30 + 20;
+            bolha.style.width = `${size}px`;
+            bolha.style.height = `${size}px`;
+            bolha.style.left = `${Math.random() * 100}vw`;
+            bolha.style.animationDuration = `${Math.random() * 3 + 3}s`;
+            document.body.appendChild(bolha);
+            bolha.addEventListener('animationend', () => {
+                bolha.remove();
+            });
+        }
+
+        setInterval(criarBolha, 500);
     </script>
 </head>
 <body>
-    <h1>Desencurtador de URL</h1>
-    <input type="text" id="urlInput" placeholder="Cole a URL encurtada aqui">
-    <button onclick="processar()">Desencurtar</button>
+    <div class="container">
+        <h1>Baixar Vídeo do TikTok</h1>
+        <label for="url">Cole a URL do vídeo do TikTok (Encurtada):</label>
+        <input type="text" id="url" placeholder="https://vm.tiktok.com/ZMk3Ck4bm/" oninput="atualizarBotao()">
+        <div id="resultado" style="margin-top: 20px;"></div>
+        <p class="instrucoes">Digite uma URL válida para gerar o botão de download.</p>
+    </div>
 </body>
 </html>
