@@ -58,17 +58,23 @@
             }
         }
 
+        // Função para verificar se a URL já é verdadeira do TikTok
+        function isUrlTikTok(url) {
+            const regexTikTok = /https:\/\/www\.tiktok\.com\/@[\w.]+\/video\/(\d+)/;
+            return regexTikTok.test(url);
+        }
+
         // Função para atualizar o botão de download
         async function atualizarBotao() {
             var url = document.getElementById('url').value;
-            const urlDesencurtada = await buscarUrlDesencurtada(url);
+            const resultado = document.getElementById('resultado');
+            resultado.innerHTML = ''; // Limpa o botão anterior
 
-            if (urlDesencurtada) {
+            if (isUrlTikTok(url)) {
+                // Se a URL já for verdadeira do TikTok, gerar diretamente o botão de download
                 var regex = /\/video\/(\d+)/;
-                var match = urlDesencurtada.match(regex);
-                var resultado = document.getElementById('resultado');
-                resultado.innerHTML = '';
-
+                var match = url.match(regex);
+                
                 if (match) {
                     var videoId = match[1];
                     var downloadUrl = `https://tikcdn.io/ssstik/${videoId}`;
@@ -82,7 +88,28 @@
                     resultado.appendChild(botao);
                 }
             } else {
-                alert("Erro ao desencurtar a URL. Verifique a URL inserida.");
+                // Se a URL for encurtada, buscar a URL verdadeira
+                const urlDesencurtada = await buscarUrlDesencurtada(url);
+                
+                if (urlDesencurtada) {
+                    var regex = /\/video\/(\d+)/;
+                    var match = urlDesencurtada.match(regex);
+
+                    if (match) {
+                        var videoId = match[1];
+                        var downloadUrl = `https://tikcdn.io/ssstik/${videoId}`;
+
+                        var botao = document.createElement("a");
+                        botao.href = downloadUrl;
+                        botao.target = "_blank";
+                        botao.innerText = "Baixar Vídeo";
+                        botao.classList.add("botao-download");
+
+                        resultado.appendChild(botao);
+                    }
+                } else {
+                    alert("Erro ao desencurtar a URL. Verifique a URL inserida.");
+                }
             }
         }
     </script>
@@ -90,7 +117,7 @@
 <body>
     <div class="container">
         <h1>Baixar Vídeo do TikTok</h1>
-        <label for="url">Cole a URL do vídeo do TikTok (Encurtada):</label>
+        <label for="url">Cole a URL do vídeo do TikTok (Encurtada ou Verdadeira):</label>
         <input type="text" id="url" placeholder="https://vm.tiktok.com/ZMk3Ck4bm/" oninput="atualizarBotao()">
         <div id="resultado" style="margin-top: 20px;"></div>
         <p class="instrucoes">Digite uma URL válida para gerar o botão de download.</p>
