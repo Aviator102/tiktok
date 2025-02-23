@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desencurtador de URL</title>
+    <script>
+        // Função para desencurtar a URL
+        function desencurtarURL(urlEncurtada) {
+            fetch(`/api/desencurtar?url=${encodeURIComponent(urlEncurtada)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.url) {
+                        alert("A URL verdadeira é: " + data.url);
+                    } else {
+                        alert("Erro ao acessar a URL.");
+                    }
+                })
+                .catch(err => {
+                    console.error('Erro na requisição:', err);
+                    alert("Erro ao acessar a URL.");
+                });
+        }
+
+        function processar() {
+            var urlEncurtada = document.getElementById("urlInput").value;
+            desencurtarURL(urlEncurtada);
+        }
+    </script>
+</head>
+<body>
+    <h1>Desencurtador de URL</h1>
+    <input type="text" id="urlInput" placeholder="Cole a URL encurtada aqui">
+    <button onclick="processar()">Desencurtar</button>
+</body>
+</html>
