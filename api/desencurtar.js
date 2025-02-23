@@ -16,7 +16,7 @@ export default async function handler(req, res) {
         if (response.ok) {
             const finalUrl = response.url;
             
-            // Exemplo de URL: https://www.tiktok.com/@bora.monetizar20/video/7460135168678972678?_r=1&_t=ZM-8u8zA8LCkM9
+            // Retorna a URL final (verdadeira)
             return res.status(200).json({ url: finalUrl });
         } else {
             return res.status(500).json({ error: "Erro ao acessar a URL." });
