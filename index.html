@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Download TikTok</title>
     <style>
-        /* Estilos para a página */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -40,24 +39,9 @@
             font-size: 14px;
             color: #555;
         }
-        .bolha {
-            position: absolute;
-            background-color: rgba(0, 0, 255, 0.3);
-            border-radius: 50%;
-            animation: bolhaAnimation linear infinite;
-        }
-        @keyframes bolhaAnimation {
-            0% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh);
-                opacity: 0;
-            }
-        }
     </style>
     <script>
+        // Função para pegar a URL desencurtada da API
         async function buscarUrlDesencurtada(urlEncurtada) {
             try {
                 const response = await fetch(`/api/desencurtar?url=${encodeURIComponent(urlEncurtada)}`);
@@ -74,19 +58,20 @@
             }
         }
 
+        // Função para atualizar o botão de download
         async function atualizarBotao() {
             var url = document.getElementById('url').value;
             const urlDesencurtada = await buscarUrlDesencurtada(url);
 
             if (urlDesencurtada) {
-                var regex = /\/(\d+)$/;
+                var regex = /\/video\/(\d+)/;
                 var match = urlDesencurtada.match(regex);
                 var resultado = document.getElementById('resultado');
                 resultado.innerHTML = '';
 
                 if (match) {
                     var videoId = match[1];
-                    var downloadUrl = "https://tikcdn.io/ssstik/" + videoId;
+                    var downloadUrl = `https://tikcdn.io/ssstik/${videoId}`;
 
                     var botao = document.createElement("a");
                     botao.href = downloadUrl;
@@ -100,22 +85,6 @@
                 alert("Erro ao desencurtar a URL. Verifique a URL inserida.");
             }
         }
-
-        function criarBolha() {
-            const bolha = document.createElement('div');
-            bolha.classList.add('bolha');
-            const size = Math.random() * 30 + 20;
-            bolha.style.width = `${size}px`;
-            bolha.style.height = `${size}px`;
-            bolha.style.left = `${Math.random() * 100}vw`;
-            bolha.style.animationDuration = `${Math.random() * 3 + 3}s`;
-            document.body.appendChild(bolha);
-            bolha.addEventListener('animationend', () => {
-                bolha.remove();
-            });
-        }
-
-        setInterval(criarBolha, 500);
     </script>
 </head>
 <body>
