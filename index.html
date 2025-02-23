@@ -140,7 +140,7 @@
 
                     var botao = document.createElement("a");
                     botao.href = downloadUrl;
-                    botao.target = "_blank";
+                    botao.download = `tiktok_video_${videoId}.mp4`; // Baixa o vídeo sem abrir uma página em branco
                     botao.innerText = "Baixar Vídeo";
                     botao.classList.add("botao-download");
 
@@ -160,7 +160,7 @@
 
                         var botao = document.createElement("a");
                         botao.href = downloadUrl;
-                        botao.target = "_blank";
+                        botao.download = `tiktok_video_${videoId}.mp4`; // Baixa o vídeo sem abrir uma página em branco
                         botao.innerText = "Baixar Vídeo";
                         botao.classList.add("botao-download");
 
